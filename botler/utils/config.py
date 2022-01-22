@@ -6,5 +6,5 @@ class Config:
         self.prefix = "&"
         self.description = "Botler by Georges"
         self.uri = "postgresql://root:password@{}:5432/botler"
-        self.database = self.uri.format("postgres")
+        self.database = self.uri.format("localhost")
         self.migration = self.uri.format("localhost")

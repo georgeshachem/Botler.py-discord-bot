@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"discord.py" = "*"
 gino = "*"
 alembic = "*"
 psycopg2-binary = "*"
+py-cord = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"

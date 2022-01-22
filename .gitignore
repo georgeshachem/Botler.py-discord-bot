@@ -133,5 +133,6 @@ dmypy.json
 
 # Botler specific
 postgres_volume/
-alembic/versions/
+alembic/versions/*
+!alembic/versions/versions.txt
 config.json
