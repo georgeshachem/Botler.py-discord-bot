@@ -9,3 +9,5 @@ bot:
 	docker-compose up -d bot
 run:
 	docker-compose up --build
+firstrun:
+	pipenv install
