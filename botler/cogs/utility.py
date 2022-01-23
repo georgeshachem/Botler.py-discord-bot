@@ -42,7 +42,7 @@ class Utility(commands.Cog):
         **Example**: `{prefix}info`"""
         embed = discord.Embed(title="Botler")
         # embed.url = f"https://top.gg/bot/{self.bot.user.id}"
-        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.display_avatar.url)
         embed.add_field(
             name="Bot Stats",
             value=f"```py\n"
@@ -62,7 +62,7 @@ class Utility(commands.Cog):
         embed.add_field(
             name="Software Versions",
             value=f"```py\n"
-            f"discord.py: {discord.__version__}\n"
+            f"py-cord: {discord.__version__}\n"
             f"Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}```",
             inline=False,
         )
@@ -71,7 +71,7 @@ class Utility(commands.Cog):
             value=f"[Invite]({self.bot.invite})",
             inline=False,
         )
-        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["socials", "links", "support"])
@@ -81,7 +81,7 @@ class Utility(commands.Cog):
         **Example**: `{prefix}invite`"""
         embed = discord.Embed()
         embed.description = f"[Invite]({self.bot.invite})"
-        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
 
