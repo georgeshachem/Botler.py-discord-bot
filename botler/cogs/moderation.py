@@ -23,6 +23,13 @@ class Moderation(commands.Cog):
             await asyncio.sleep(time)
             await member.remove_roles(role)
 
+    @commands.command(name='unmute')
+    @commands.has_permissions(manage_roles=True)
+    async def _unmute(self, ctx: commands.Context, member: discord.Member):
+        role = discord.utils.get(ctx.guild.roles, name="Muted")
+        await member.remove_roles(role)
+        await ctx.send(("Unmuted {}").format(member))
+
     @commands.command(name='timeout')
     @commands.has_permissions(manage_roles=True)
     async def _timeout(self, ctx: commands.Context, member: discord.Member, duration: str = None):
