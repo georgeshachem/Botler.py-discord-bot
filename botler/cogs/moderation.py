@@ -54,6 +54,17 @@ class Moderation(commands.Cog):
                             value=f'{warn.reason}', inline=False)
         await ctx.send(embed=embed)
 
+    @commands.command(name='kick')
+    @commands.has_permissions(manage_roles=True)
+    async def _kick(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+        await member.kick(reason=reason)
+        await ctx.send(("Kicked {}").format(member))
+
+    @commands.command(name='ban')
+    @commands.has_permissions(manage_roles=True)
+    async def _ban(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+        await member.ban(reason=reason)
+        await ctx.send(("Banned {}").format(member))
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
