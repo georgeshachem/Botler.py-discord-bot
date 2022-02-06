@@ -15,6 +15,10 @@ class Moderation(commands.Cog):
     @commands.command(name='mute')
     @commands.has_permissions(manage_roles=True)
     async def _mute(self, ctx: commands.Context, member: discord.Member, time: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         role = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.add_roles(role)
         await ctx.send(("Muted {}").format(member))
@@ -33,6 +37,10 @@ class Moderation(commands.Cog):
     @commands.command(name='timeout')
     @commands.has_permissions(manage_roles=True)
     async def _timeout(self, ctx: commands.Context, member: discord.Member, duration: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         duration = int(duration[:-1]) * seconds_per_unit[duration[-1]]
         await member.timeout_for(duration=datetime.timedelta(seconds=duration))
         await ctx.send(("Timed out {}").format(member))
@@ -40,6 +48,10 @@ class Moderation(commands.Cog):
     @commands.command(name='warn')
     @commands.has_permissions(manage_roles=True)
     async def _warn(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         await models.Warn.create(guild_id=ctx.guild.id, user_id=member.id, reason=reason, moderator=f'{ctx.author.name}#{ctx.author.discriminator}')
         await ctx.send(("Warned {}").format(member))
 
@@ -57,14 +69,23 @@ class Moderation(commands.Cog):
     @commands.command(name='kick')
     @commands.has_permissions(manage_roles=True)
     async def _kick(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         await member.kick(reason=reason)
         await ctx.send(("Kicked {}").format(member))
 
     @commands.command(name='ban')
     @commands.has_permissions(manage_roles=True)
     async def _ban(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         await member.ban(reason=reason)
         await ctx.send(("Banned {}").format(member))
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
