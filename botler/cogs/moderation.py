@@ -34,6 +34,8 @@ class Moderation(commands.Cog):
     @commands.command(name='unmute')
     @commands.has_permissions(manage_roles=True)
     async def _unmute(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
         role = discord.utils.get(ctx.guild.roles, name="Muted")
         await member.remove_roles(role)
         await ctx.send(("Unmuted {}").format(member))
@@ -52,6 +54,14 @@ class Moderation(commands.Cog):
         duration = int(duration[:-1]) * seconds_per_unit[duration[-1]]
         await member.timeout_for(duration=datetime.timedelta(seconds=duration))
         await ctx.send(("Timed out {}").format(member))
+
+    @commands.command(name='untimeout')
+    @commands.has_permissions(manage_roles=True)
+    async def _untimeout(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.remove_timeout()
+        await ctx.send(("Removed {} from time out").format(member))
 
     @commands.command(name='warn')
     @commands.has_permissions(manage_roles=True)
@@ -97,6 +107,52 @@ class Moderation(commands.Cog):
             return await ctx.send("I can't do that because this person has a higher role than me.")
         await member.ban(reason=reason)
         await ctx.send(("Banned {}").format(member))
+
+    @commands.command(name='setnick')
+    @commands.has_permissions(manage_roles=True)
+    async def _set_nick(self, ctx: commands.Context, member: discord.Member, *, name: str = None):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.edit(nick=name)
+        await ctx.send(("Changed {} nickname").format(member))
+
+    @commands.command(name='vmute')
+    @commands.has_permissions(manage_roles=True)
+    async def _voice_mute(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.edit(mute=True)
+        await ctx.send(("Muted {} in voice").format(member))
+
+    @commands.command(name='vunmute')
+    @commands.has_permissions(manage_roles=True)
+    async def _voice_unmute(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.edit(mute=False)
+        await ctx.send(("Unmuted {} in voice").format(member))
+
+    @commands.command(name='deafen')
+    @commands.has_permissions(manage_roles=True)
+    async def _voice_deafen(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.author.top_role):
+            return await ctx.send("You can't do that because this person has a higher role than you.")
+        elif (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.edit(deafen=True)
+        await ctx.send(("Deafened {} in voice").format(member))
+
+    @commands.command(name='undeafen')
+    @commands.has_permissions(manage_roles=True)
+    async def _voice_undeafen(self, ctx: commands.Context, member: discord.Member):
+        if (member.top_role >= ctx.guild.me.top_role):
+            return await ctx.send("I can't do that because this person has a higher role than me.")
+        await member.edit(deafen=False)
+        await ctx.send(("Undeafened {} in voice").format(member))
 
 
 def setup(bot):
