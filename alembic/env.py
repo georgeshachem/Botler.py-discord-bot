@@ -18,7 +18,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import botler.utils
-config.set_main_option("sqlalchemy.url", botler.utils.config.migration)
+config.set_main_option("sqlalchemy.url", botler.utils.config.database_uri)
 from botler.database import db
 target_metadata = db
 

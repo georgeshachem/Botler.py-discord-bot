@@ -6,7 +6,7 @@ db = Gino()
 import botler.database.models as models
 
 async def setup():
-    await db.set_bind(utils.config.database)
+    await db.set_bind(utils.config.database_uri)
 
 async def shutdown():
     await db.pop_bind().close()
