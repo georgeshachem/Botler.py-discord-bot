@@ -38,6 +38,9 @@ class CommandErrorsHandler(commands.Cog):
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             return await ctx.send(error)
 
+        elif isinstance(error, commands.errors.CommandOnCooldown):
+            return await ctx.send(error)
+
         else:
             print('Ignoring exception in command {}:'.format(
                 ctx.command), file=sys.stderr)
