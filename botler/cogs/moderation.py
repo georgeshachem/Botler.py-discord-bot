@@ -72,7 +72,7 @@ class Moderation(commands.Cog):
     @commands.command(name='warns')
     @commands.has_permissions(manage_roles=True)
     async def _warns(self, ctx: commands.Context, member: discord.Member):
-        member_warns = await models.Warn.query.where(models.Warn.user_id == member.id).gino.all()
+        member_warns = await models.Warn.query.where((models.Warn.user_id == member.id) & (models.Warn.guild_id == ctx.guild.id)).gino.all()
         embed = discord.Embed(
             title=f'Warnings for {member.name}#{member.discriminator} ({member.id}): {len(member_warns)}', color=0xff0000)
         for warn in member_warns:
