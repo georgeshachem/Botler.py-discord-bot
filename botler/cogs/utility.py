@@ -11,8 +11,8 @@ class Utility(commands.Cog):
         self.start_time = datetime.now().replace(microsecond=0)
 
 
-    @commands.command()
-    async def ping(self, ctx):
+    @commands.command(name='ping')
+    async def _ping(self, ctx: commands.Context):
         """*Current ping and latency of the bot*
         **Example**: {}ping""".format(ctx.prefix)
         embed = discord.Embed()
@@ -26,8 +26,8 @@ class Utility(commands.Cog):
         embed.add_field(name="latency", value=f"{latency}ms")
         await msg.edit(embed=embed)
 
-    @commands.command()
-    async def uptime(self, ctx):
+    @commands.command(name='uptime')
+    async def _uptime(self, ctx: commands.Context):
         """*Current uptime of the bot*
         **Example**: `{prefix}uptime`"""
         current_time = datetime.now().replace(microsecond=0)
@@ -36,8 +36,8 @@ class Utility(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def info(self, ctx):
+    @commands.command(name='info')
+    async def _info(self, ctx: commands.Context):
         """*Shows stats and infos about the bot*
         **Example**: `{prefix}info`"""
         embed = discord.Embed(title="Botler")
@@ -74,8 +74,8 @@ class Utility(commands.Cog):
         embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["socials", "links", "support"])
-    async def invite(self, ctx):
+    @commands.command(name='invite', aliases=["socials", "links", "support"])
+    async def _invite(self, ctx):
         """*Shows invite link and other socials for the bot*
         **Aliases**: `socials`, `links`, `support`
         **Example**: `{prefix}invite`"""
