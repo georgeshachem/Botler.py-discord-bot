@@ -10,7 +10,6 @@ class Utility(commands.Cog):
         self.bot = bot
         self.start_time = datetime.now().replace(microsecond=0)
 
-
     @commands.command(name='ping')
     async def _ping(self, ctx: commands.Context):
         """*Current ping and latency of the bot*
@@ -71,7 +70,8 @@ class Utility(commands.Cog):
             value=f"[Invite]({self.bot.invite})",
             inline=False,
         )
-        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.display_avatar.url)
+        embed.set_footer(text="Thank you for using Botler <3",
+                         icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
     @commands.command(name='invite', aliases=["socials", "links", "support"])
@@ -81,7 +81,8 @@ class Utility(commands.Cog):
         **Example**: `{prefix}invite`"""
         embed = discord.Embed()
         embed.description = f"[Invite]({self.bot.invite})"
-        embed.set_footer(text="Thank you for using Botler <3", icon_url=self.bot.user.display_avatar.url)
+        embed.set_footer(text="Thank you for using Botler <3",
+                         icon_url=self.bot.user.display_avatar.url)
         await ctx.send(embed=embed)
 
 
