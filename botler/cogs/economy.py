@@ -9,7 +9,6 @@ class Economy(commands.Cog):
         self.bot = bot
 
     @commands.command(name='balance', aliases=['bal'])
-    @commands.has_permissions(manage_roles=True)
     async def _balance(self, ctx: commands.Context, member: discord.Member = None):
         if not member:
             member = ctx.author
