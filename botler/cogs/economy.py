@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import botler.database.models as models
+import datetime
 
 
 class Economy(commands.Cog):
@@ -13,7 +14,13 @@ class Economy(commands.Cog):
         if not member:
             member = ctx.author
         member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
-        await ctx.reply(f"Your current balance is {member_balance.balance}")
+        embed = discord.Embed(
+            title="Balance", timestamp=datetime.datetime.now())
+        embed.set_author(name=f"{member.name}#{member.discriminator}",
+                         icon_url=member.display_avatar.url)
+        embed.add_field(
+            name="Cash", value=member_balance.balance, inline=False)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):
