@@ -3,6 +3,7 @@ from discord.ext import commands
 import traceback
 import botler.utils
 from pathlib import Path
+import botler.database.models as models
 
 intents = discord.Intents.default()
 intents.members = True
@@ -26,6 +27,18 @@ def load_extensions(_bot):
         except (discord.ClientException, ModuleNotFoundError):
             print(f'Failed to load extension {ext}.')
             traceback.print_exc()
+
+
+@bot.event
+async def on_message(message):
+    if ((message.guild) and (not message.author.bot)):
+        member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (models.Economy.member_id == message.author.id)).gino.first()
+        if (member_balance):
+            await member_balance.update(balance=member_balance.balance+2).apply()
+        else:
+            await models.Economy.create(guild_id=message.guild.id, member_id=message.author.id)
+
+    await bot.process_commands(message)
 
 
 def run():

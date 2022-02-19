@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import botler.database as db
 import botler.utils
-import botler.database.models as models
 
 invite_link = "https://discord.com/api/oauth2/authorize?client_id={}&&permissions=8&scope=bot"
 
@@ -35,16 +34,6 @@ class Events(commands.Cog):
     async def on_guild_remove(self, guild: discord.Guild):
         await db.delete_guild(guild.id)
         self.bot.guild_data.pop(guild.id, None)
-
-    @commands.Cog.listener('on_message')
-    @commands.guild_only()
-    async def add_money(self, message: discord.Message):
-        if ((message.guild) and (not message.author.bot)):
-            member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (models.Economy.member_id == message.author.id)).gino.first()
-            if (member_balance):
-                await member_balance.update(balance=member_balance.balance+2).apply()
-            else:
-                await models.Economy.create(guild_id=message.guild.id, member_id=message.author.id)
 
 
 def setup(bot):
