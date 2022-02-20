@@ -9,6 +9,8 @@ alembic = "*"
 psycopg2-binary = "*"
 py-cord = {git = "https://github.com/Pycord-Development/pycord"}
 tzdata = "*"
+matplotlib = "*"
+numpy = "*"
 
 [dev-packages]
 
