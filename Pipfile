@@ -8,6 +8,7 @@ gino = "*"
 alembic = "*"
 psycopg2-binary = "*"
 py-cord = {git = "https://github.com/Pycord-Development/pycord"}
+tzdata = "*"
 
 [dev-packages]
 
