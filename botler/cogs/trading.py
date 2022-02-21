@@ -1,9 +1,15 @@
 from discord.ext import commands
 import aiohttp
 import os
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+import discord
+from datetime import datetime
 
 COINGECKO_SEARCH_API_URL = "https://api.coingecko.com/api/v3/search?query={}"
 COINGECKO_PRICE_API_URL = "https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd"
+COINGECKO_PRICE_HISTORY_API_URL = "https://api.coingecko.com/api/v3/coins/{}/market_chart?vs_currency=usd&days={}"
 
 ALPHA_ADVANTAGE_API_KEY = os.getenv("ALPHA_ADVANTAGE_API_KEY")
 ALPHA_ADVANTAGE_API_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={}&apikey={}"
@@ -41,6 +47,17 @@ class Trading(commands.Cog):
                 else:
                     return None
 
+    async def get_crypto_history(self, coin: dict, days: str):
+        coin_id = coin['id']
+        current_url = COINGECKO_PRICE_HISTORY_API_URL.format(coin_id, days)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(current_url) as response:
+                if (response.status == 200):
+                    data = await response.json()
+                    return data['prices']
+                else:
+                    return None
+
     async def get_stock_price(self, symbol: str):
         current_url = ALPHA_ADVANTAGE_API_URL.format(
             symbol, ALPHA_ADVANTAGE_API_KEY)
@@ -63,6 +80,30 @@ class Trading(commands.Cog):
             coin_price = await self.get_crypto_price(coin_match)
             if (coin_price):
                 await ctx.reply(f"{coin_match['name']} = {coin_price} USD")
+            else:
+                await ctx.reply("An error occured when fetching the price.")
+        else:
+            await ctx.reply("Can't find this coin.")
+
+    @commands.command(name='cryptochart', aliases=['cchart'])
+    async def _crypto_chart(self, ctx: commands.Context, days: int, *, coin: str):
+        coin_match = await self.get_crypto_match(coin)
+        if (coin_match):
+            coin_price_history = await self.get_crypto_history(coin_match, days)
+            if (coin_price_history):
+                x = np.array([datetime.fromtimestamp(elt[0]/1000)
+                             for elt in coin_price_history])
+                y = np.array([elt[1] for elt in coin_price_history])
+
+                plt.plot(x, y)
+                plt.xticks(rotation=45)
+                plt.subplots_adjust(bottom=0.2)
+                graph_file = io.BytesIO()
+                plt.savefig(graph_file, format='png')
+                graph_file.seek(0)
+                plt.cla()
+
+                await ctx.reply(file=discord.File(graph_file, filename="crypto_history.png"))
             else:
                 await ctx.reply("An error occured when fetching the price.")
         else:
