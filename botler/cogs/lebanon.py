@@ -43,7 +43,7 @@ class Lebanon(commands.Cog):
         buy_timestamp /= 1000
         buy_dt = datetime.fromtimestamp(
             buy_timestamp).astimezone(ZoneInfo('Asia/Beirut'))
-        time_text = buy_dt.strftime('%I:%M%p %d-%m-%Y')
+        time_text = buy_dt.strftime('%I:%M %p %d/%m/%Y')
 
         duration = self.current_lirarate_dt - \
             datetime.fromtimestamp(buy_timestamp)
@@ -51,7 +51,7 @@ class Lebanon(commands.Cog):
         hours = int(duration_in_s//3600)
         minutes = int((duration_in_s % 3600)/60)
 
-        await ctx.reply(f"Buy 1 USD at {buy_price} LBP\nSell 1 USD at {sell_price} LBP\nUpdated {hours} hours and {minutes} minutes ago at {time_text}")
+        await ctx.reply(f"Buy 1 USD at {buy_price:,} LBP\nSell 1 USD at {sell_price:,} LBP\nUpdated {hours} hours and {minutes} minutes ago at {time_text}")
 
     @commands.command(name='convert', aliases=['usdtolbp'])
     async def _convert_usd_to_lbp(self, ctx: commands.Context, amount: int):
