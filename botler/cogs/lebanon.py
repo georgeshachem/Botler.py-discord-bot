@@ -90,6 +90,7 @@ class Lebanon(commands.Cog):
         graph_file = io.BytesIO()
         plt.savefig(graph_file, format='png')
         graph_file.seek(0)
+        plt.cla()
 
         await ctx.reply(file=discord.File(graph_file, filename="lbpgraph.png"))
 
