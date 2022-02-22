@@ -37,9 +37,11 @@ class Help(commands.Cog):
                 cog_commands = cog.get_commands()
                 if (cog_commands):
                     for command in cog_commands:
-                        cog_commands_text += f' `{command.name}`'
-                    embed.add_field(
-                        name=cog_name, value=cog_commands_text, inline=False)
+                        if (not command.hidden):
+                            cog_commands_text += f' `{command.name}`'
+                    if (cog_commands_text):
+                        embed.add_field(
+                            name=cog_name, value=cog_commands_text, inline=False)
         else:
             cog = self.bot.get_cog(input.title())
             if (cog is not None):
@@ -48,12 +50,17 @@ class Help(commands.Cog):
                 cog_commands = cog.get_commands()
                 cog_commands_text = ''
                 for command in cog_commands:
-                    cog_commands_text += f'**{command.name}** - {command.short_doc}\n'
-                embed.add_field(name='Commands',
-                                value=cog_commands_text, inline=False)
+                    if (not command.hidden):
+                        cog_commands_text += f'**{command.name}** - {command.short_doc}\n'
+                if (cog_commands_text):
+                    embed.add_field(name='Commands',
+                                    value=cog_commands_text, inline=False)
+                else:
+                    embed = discord.Embed(title="Category or command not found", color=discord.Color.red(),
+                                          description=f'This category or command can not be found! Please check again.')
             else:
                 command = self.bot.get_command(input)
-                if (command is not None):
+                if (command is not None and not command.hidden):
                     embed = discord.Embed(title=command.name, color=discord.Color.green(),
                                           description=f'{command.help}')
                 else:
