@@ -62,7 +62,7 @@ class Help(commands.Cog):
                 command = self.bot.get_command(input)
                 if (command is not None and not command.hidden):
                     embed = discord.Embed(title=command.name, color=discord.Color.green(),
-                                          description=f'{command.help}')
+                                          description=f'{(command.help).format(prefix=ctx.prefix)}')
                 else:
                     embed = discord.Embed(title="Category or command not found", color=discord.Color.red(),
                                           description=f'This category or command can not be found! Please check again.')
