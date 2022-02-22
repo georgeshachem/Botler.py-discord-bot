@@ -1,12 +1,12 @@
 from discord.ext import commands
 
 
-class Owner(commands.Cog):
+class Owner(commands.Cog, command_attrs=dict(hidden=True)):
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='load', hidden=True)
+    @commands.command(name='load')
     @commands.is_owner()
     async def load_cog(self, ctx: commands.Context, *, cog: str):
         """Command which Loads a Module.
@@ -19,7 +19,7 @@ class Owner(commands.Cog):
         else:
             await ctx.send('**`SUCCESS`**')
 
-    @commands.command(name='unload', hidden=True)
+    @commands.command(name='unload')
     @commands.is_owner()
     async def unload_cog(self, ctx: commands.Context, *, cog: str):
         """Command which Unloads a Module.
@@ -32,7 +32,7 @@ class Owner(commands.Cog):
         else:
             await ctx.send('**`SUCCESS`**')
 
-    @commands.command(name='reload', hidden=True)
+    @commands.command(name='reload')
     @commands.is_owner()
     async def reload_cog(self, ctx: commands.Context, *, cog: str):
         """Command which Reloads a Module.
