@@ -69,8 +69,8 @@ class Utility(commands.Cog):
             text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
         await ctx.send(embed=embed)
 
-    @commands.command(name='serverinfo', aliases=['sinfo'])
-    async def _server_info(self, ctx: commands.Context):
+    @commands.command(name='botinfo', aliases=['binfo'])
+    async def _bot_info(self, ctx: commands.Context):
         """*Shows stats and infos about the bot*
         **Example**: `{prefix}info`"""
         embed = discord.Embed(title="Botler")
