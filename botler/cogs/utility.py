@@ -46,8 +46,31 @@ class Utility(commands.Cog):
         em.set_image(url=member.display_avatar.url)
         await ctx.send(embed=em)
 
-    @commands.command(name='info')
-    async def _info(self, ctx: commands.Context):
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='whois', aliases=['info', 'userinfo'])
+    async def _user_info(self, ctx: commands.Context, member: discord.Member = None):
+        if not member:
+            member = ctx.message.author
+        roles = [role for role in (member.roles)[1:]]
+        embed = discord.Embed(colour=discord.Colour.blue(), timestamp=ctx.message.created_at,
+                              title=f"User Info - {member}")
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.add_field(name="User ID:", value=member.id)
+        embed.add_field(name="Display Name:", value=member.display_name)
+        embed.add_field(name="Account Created On:", value=member.created_at.strftime(
+            "%a, %#d %B %Y, %I:%M %p UTC"))
+        embed.add_field(name="Joined Server On:", value=member.joined_at.strftime(
+            "%a, %#d %B %Y, %I:%M %p UTC"))
+        embed.add_field(name="Roles:", value=" ".join(
+            [role.mention for role in roles]) if roles else None)
+        embed.add_field(name="Highest Role:", value=member.top_role.mention)
+        embed.set_footer(
+            text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
+        await ctx.send(embed=embed)
+
+    @commands.command(name='serverinfo', aliases=['sinfo'])
+    async def _server_info(self, ctx: commands.Context):
         """*Shows stats and infos about the bot*
         **Example**: `{prefix}info`"""
         embed = discord.Embed(title="Botler")
