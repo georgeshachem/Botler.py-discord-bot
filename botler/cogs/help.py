@@ -38,10 +38,10 @@ class Help(commands.Cog):
                 if (cog_commands):
                     for command in cog_commands:
                         if (not command.hidden):
-                            cog_commands_text += f' `{command.name}`'
+                            cog_commands_text += f' • `{command.name}`'
                     if (cog_commands_text):
                         embed.add_field(
-                            name=cog_name, value=cog_commands_text, inline=False)
+                            name=cog_name, value=cog_commands_text[3:], inline=False)
         else:
             cog = self.bot.get_cog(input.title())
             if (cog is not None):
