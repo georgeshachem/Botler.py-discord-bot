@@ -7,7 +7,7 @@ import botler.database.models as models
 
 intents = discord.Intents.default()
 intents.members = True
-intents.message_content = True
+intents.messages = True
 
 bot = commands.Bot(command_prefix=botler.utils.get_prefix,
                    description=botler.utils.config.description,

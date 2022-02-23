@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9697df1125a08cca466b9a629eb456a0fc4a94f7951145ddfbc4e54853677984"
+            "sha256": "8e72a8b7e768bdf2b02a1ae8d857e9d1bf9217cec6627b133ab584ff6f21d9e9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -610,8 +610,12 @@
             "version": "==2.9.3"
         },
         "py-cord": {
-            "git": "https://github.com/Pycord-Development/pycord",
-            "ref": "1aa6ba2174ca49a5dc4d408d5317efc4d1c0bd32"
+            "hashes": [
+                "sha256:34ef313b814997d819458d5e7147b011a18b9613f02f369bb432c9ca52924173",
+                "sha256:49b216af4595781f110725660786c8d650b661c45aff4c392d74e886d0f3c4c0"
+            ],
+            "index": "pypi",
+            "version": "==2.0.0b4"
         },
         "pyparsing": {
             "hashes": [
