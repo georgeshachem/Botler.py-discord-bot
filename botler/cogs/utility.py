@@ -35,6 +35,17 @@ class Utility(commands.Cog):
         )
         await ctx.send(embed=embed)
 
+    @commands.command(name='avatar')
+    async def _avatar(self, ctx: commands.Context, member: discord.Member = None):
+        if not member:
+            member = ctx.author
+        em = discord.Embed(
+            description=f"[Avatar URL]({member.display_avatar.url})")
+        em.set_footer(
+            text=f"Requested by {ctx.author}", icon_url=ctx.author.display_avatar.url)
+        em.set_image(url=member.display_avatar.url)
+        await ctx.send(embed=em)
+
     @commands.command(name='info')
     async def _info(self, ctx: commands.Context):
         """*Shows stats and infos about the bot*
