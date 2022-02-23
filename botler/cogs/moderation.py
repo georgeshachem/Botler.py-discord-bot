@@ -155,6 +155,12 @@ class Moderation(commands.Cog):
         await member.edit(deafen=False)
         await ctx.send(("Undeafened {} in voice").format(member))
 
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='purge')
+    async def _purge(self, ctx: commands.Context, amount: int = 99):
+        await ctx.channel.purge(limit=amount+1)
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
