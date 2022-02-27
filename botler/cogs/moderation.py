@@ -66,7 +66,7 @@ class Moderation(commands.Cog):
 
     @commands.command(name='warn')
     @commands.has_permissions(manage_roles=True)
-    async def _warn(self, ctx: commands.Context, member: discord.Member, reason: str = None):
+    async def _warn(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         await models.Warn.create(guild_id=ctx.guild.id, user_id=member.id, reason=reason, moderator=f'{ctx.author.name}#{ctx.author.discriminator}')
         await ctx.send(("Warned {}").format(member))
 
