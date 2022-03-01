@@ -12,9 +12,9 @@ class Management(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     @commands.command(name='prefix')
     async def _prefix(self, ctx: commands.Context, new_prefix: str = None):
-        """*Change your servers prefix*
+        """
+        *Change your servers prefix*
         **Example**: `{prefix}prefix !`
-        **Requires permission**: `MANAGER SERVER`
         """
         if not new_prefix:
             prefix = botler.utils.get_guild_prefix(self.bot, ctx.guild.id)
