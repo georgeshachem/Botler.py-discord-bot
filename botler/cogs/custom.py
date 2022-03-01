@@ -14,6 +14,10 @@ class Custom(commands.Cog):
     @commands.command(name='addcustom')
     @commands.has_permissions(manage_roles=True)
     async def _add_custom_role(self, ctx: commands.Context, role: discord.Role, icon_perm: bool = False):
+        """
+        *Mark a role as custom*
+        **Example**: `{prefix}addcustom @customrole`
+        """
         try:
             await models.CustomRole.create(guild_id=ctx.guild.id, role_id=role.id, icon_perm=icon_perm)
         except UniqueViolationError:
@@ -94,13 +98,20 @@ class Custom(commands.Cog):
         if custom_roles:
             embed = discord.Embed(title="Custom Roles")
             for role in custom_roles:
-                if role.icon_perm:
-                    embed.add_field(name=ctx.guild.get_role(
-                        int(role.role_id)).name, value=":white_check_mark:", inline=True)
+                fetched_role = ctx.guild.get_role(int(role.role_id))
+                if (fetched_role):
+                    if role.icon_perm:
+                        embed.add_field(name=fetched_role.name,
+                                        value=":white_check_mark:", inline=True)
+                    else:
+                        embed.add_field(name=fetched_role.name,
+                                        value=":x:", inline=True)
                 else:
-                    embed.add_field(name=ctx.guild.get_role(
-                        int(role.role_id)).name, value=":x:", inline=True)
-            return await ctx.send(embed=embed)
+                    await role.delete()
+            if (len(embed.fields) > 0):
+                return await ctx.send(embed=embed)
+            else:
+                return await ctx.send("All of your set up custom roles got deleted")
         else:
             return await ctx.send("You don't have any custom role set up")
 
