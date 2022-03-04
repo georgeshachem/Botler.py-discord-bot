@@ -1,9 +1,9 @@
-import botler.database.models as models
 from gino import Gino
 from botler import utils
 
 db = Gino()
 
+import botler.database.models as models
 
 async def setup():
     await db.set_bind(utils.config.database_uri)
