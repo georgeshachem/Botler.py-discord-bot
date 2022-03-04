@@ -27,13 +27,15 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
-        await db.query_guild(guild.id)
-        self.bot.guild_data[guild.id] = botler.utils.Config().prefix
+        guild_id = int(guild.id)
+        await db.query_guild(guild_id)
+        self.bot.guild_data[guild_id] = botler.utils.Config().prefix
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild):
-        await db.delete_guild(guild.id)
-        self.bot.guild_data.pop(guild.id, None)
+        guild_id = int(guild.id)
+        await db.delete_guild(guild_id)
+        self.bot.guild_data.pop(guild_id, None)
 
 
 def setup(bot):
