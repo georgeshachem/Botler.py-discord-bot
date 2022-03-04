@@ -16,7 +16,7 @@ async def preload_guild_data():
 def get_guild_prefix(bot, guild_id):
     guild_data = bot.guild_data.get(guild_id, None)
     if guild_data is not None:
-        return guild_data.get("prefix")
+        return guild_data
     else:
         return config.prefix
 
