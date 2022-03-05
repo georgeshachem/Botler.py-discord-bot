@@ -29,7 +29,8 @@ class Events(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         guild_id = int(guild.id)
         await db.query_guild(guild_id)
-        self.bot.guild_data[guild_id] = botler.utils.Config().prefix
+        self.bot.guild_data[guild_id] = {
+            "prefix": botler.utils.Config().prefix}
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild):
