@@ -60,6 +60,128 @@ class Economy(commands.Cog):
         await ctx.reply(
             f"Resetted {member.name}#{member.discriminator} balance.")
 
+    @commands.command(name='additem', aliases=['add-item', 'createitem', 'create-item'])
+    @commands.has_permissions(manage_roles=True)
+    async def _add_item(self, ctx: commands.Context, name: str, price: int = 0, description: str = None, stock: int = -1, role_required: discord.Role = None,
+                        role_given: discord.Role = None, role_removed: discord.Role = None, required_balance: int = 0, reply: str = None):
+        price = abs(price)
+        required_balance = abs(required_balance)
+        role_required = role_required.id if role_required else None
+        role_given = role_given.id if role_given else None
+        role_removed = role_removed.id if role_removed else None
+        await models.Item.create(guild_id=ctx.guild.id, name=name, price=price, description=description, stock=stock,
+                                 role_required=role_required, role_given=role_given, role_removed=role_removed,
+                                 required_balance=required_balance, reply=reply)
+        await ctx.reply("Item added")
+
+    @commands.command(name='buyitem', aliases=['buy-item'])
+    @commands.has_permissions(manage_roles=True)
+    async def _buy_item(self, ctx: commands.Context, name: str):
+        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        if (item):
+            if (item.price > 0):
+                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == ctx.author.id)).gino.first()
+                new_balance = member_balance.balance - item.price
+                if (new_balance > 0):
+                    await member_balance.update(balance=new_balance).apply()
+                else:
+                    return await ctx.reply("You don't have enough money.")
+
+            if (item.stock > 0):
+                await item.update(stock=item.stock-1).apply()
+            elif (item.stock == 0):
+                return await ctx.reply("This item is out of stock.")
+
+            if (item.role_required):
+                fetched_role = ctx.guild.get_role(item.role_required)
+                if (fetched_role):
+                    if (fetched_role not in ctx.author.roles):
+                        return await ctx.reply("You don't have the required role to buy this item.")
+                else:
+                    return await ctx.reply("This item's required role does not exist. Contact an admin.")
+
+            if (item.role_given):
+                fetched_role = ctx.guild.get_role(item.role_given)
+                if (fetched_role):
+                    await ctx.author.add_roles(fetched_role)
+                else:
+                    return await ctx.reply("This item's role to add does not exist. Contact an admin.")
+
+            if (item.role_removed):
+                fetched_role = ctx.guild.get_role(item.role_removed)
+                if (fetched_role):
+                    if (fetched_role in ctx.author.roles):
+                        await ctx.author.remove_roles(fetched_role)
+                else:
+                    return await ctx.reply("This item's role to remove does not exist. Contact an admin.")
+
+            if (item.required_balance):
+                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == ctx.author.id)).gino.first()
+                if (member_balance.balance < item.required_balance):
+                    return await ctx.reply("You need a higher balance.")
+
+            if (item.reply):
+                await ctx.reply(item.reply)
+
+            await ctx.reply("Item bought!")
+
+        else:
+            return await ctx.reply("Item not found! Check the name spelling.")
+
+    @commands.command(name='edititem', aliases=['edit-item'])
+    @commands.has_permissions(manage_roles=True)
+    async def _edit_item(self, ctx: commands.Context, option: str, name: str, new_vlaue):
+        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        if (item):
+            role_converter = commands.RoleConverter()
+
+            if (option == "name"):
+                await item.update(name=str(new_vlaue)).apply()
+                return await ctx.reply("Updated name")
+            elif (option == "price"):
+                await item.update(price=abs(int(new_vlaue))).apply()
+                return await ctx.reply("Updated price")
+            elif (option == "description"):
+                await item.update(description=str(new_vlaue)).apply()
+                return await ctx.reply("Updated description")
+            elif (option == "stock"):
+                await item.update(stock=int(new_vlaue)).apply()
+                return await ctx.reply("Updated stock")
+            elif (option == "role_required"):
+                role = await role_converter.convert(ctx, new_vlaue)
+                await item.update(role_required=role.id).apply()
+                return await ctx.reply("Updated role required")
+            elif (option == "role_given"):
+                role = await role_converter.convert(ctx, new_vlaue)
+                await item.update(role_given=role.id).apply()
+                return await ctx.reply("Updated role given")
+            elif (option == "role_removed"):
+                role = await role_converter.convert(ctx, new_vlaue)
+                await item.update(role_removed=role.id).apply()
+                return await ctx.reply("Updated role removed")
+            elif (option == "required_balance"):
+                await item.update(required_balance=abs(int(new_vlaue))).apply()
+                return await ctx.reply("Updated required balance")
+            elif (option == "reply"):
+                await item.update(reply=str(new_vlaue)).apply()
+                return await ctx.reply("Updated reply")
+            else:
+                return await ctx.reply("Invalid option!")
+        else:
+            return await ctx.reply("Item not found! Check the name spelling.")
+
+    @commands.command(name='store', aliases=['shop'])
+    async def _store(self, ctx: commands.Context):
+        items = await models.Item.query.where(models.Item.guild_id == ctx.guild.id).gino.all()
+        if (items):
+            embed = discord.Embed(title="Shop")
+            for item in items:
+                embed.add_field(name=f"{item.name}",
+                                value=f"${item.price}", inline=True)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.reply("Shop is empty...")
+
 
 def setup(bot):
     bot.add_cog(Economy(bot))
