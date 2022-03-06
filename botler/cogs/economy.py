@@ -176,7 +176,7 @@ class Economy(commands.Cog):
         item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
         if (item):
             await item.delete()
-            ctx.reply("Item deleted")
+            await ctx.reply("Item deleted")
         else:
             return await ctx.reply("Item not found! Check the name spelling.")
 
