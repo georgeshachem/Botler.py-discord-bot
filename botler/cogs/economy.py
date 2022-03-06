@@ -74,7 +74,7 @@ class Economy(commands.Cog):
                                  required_balance=required_balance, reply=reply)
         await ctx.reply("Item added")
 
-    @commands.command(name='buyitem', aliases=['buy-item'])
+    @commands.command(name='buyitem', aliases=['buy-item', 'buy'])
     @commands.has_permissions(manage_roles=True)
     async def _buy_item(self, ctx: commands.Context, name: str):
         item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
@@ -167,6 +167,16 @@ class Economy(commands.Cog):
                 return await ctx.reply("Updated reply")
             else:
                 return await ctx.reply("Invalid option!")
+        else:
+            return await ctx.reply("Item not found! Check the name spelling.")
+
+    @commands.command(name='removeitem', aliases=['remove-item', 'deleteitem', 'delete-item'])
+    @commands.has_permissions(manage_roles=True)
+    async def _remove_item(self, ctx: commands.Context, name: str):
+        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        if (item):
+            await item.delete()
+            ctx.reply("Item deleted")
         else:
             return await ctx.reply("Item not found! Check the name spelling.")
 
