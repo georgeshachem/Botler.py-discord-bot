@@ -161,7 +161,7 @@ class Music(commands.Cog):
         if not player.is_playing:
             await player.play()
 
-    @commands.command(name='disconnect', aliases=['dc'])
+    @commands.command(name='disconnect', aliases=['dc', 'stop'])
     async def _disconnect(self, ctx):
         """ Disconnects the player from the voice channel and clears its queue. """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
