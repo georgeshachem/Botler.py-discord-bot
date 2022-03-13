@@ -211,6 +211,7 @@ class Music(commands.Cog):
 
         if not player.paused:
             await player.set_pause(True)
+            await ctx.send('Paused.')
         else:
             await ctx.send('Already paused.')
 
@@ -227,6 +228,7 @@ class Music(commands.Cog):
 
         if player.paused:
             await player.set_pause(False)
+            await ctx.send('Resumed.')
         else:
             await ctx.send('Not paused.')
 
@@ -242,6 +244,7 @@ class Music(commands.Cog):
             return await ctx.send('You\'re not in my voicechannel!')
 
         await player.skip()
+        await ctx.send('Skipped.')
 
     @commands.command(name='nowplaying', aliases=['np'])
     async def _now_playing(self, ctx):
