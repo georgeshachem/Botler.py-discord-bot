@@ -41,7 +41,7 @@ class Moderation(commands.Cog):
         await member.remove_roles(role)
         await ctx.send(("Unmuted {}").format(member))
 
-    @commands.command(name='timeout')
+    @commands.command(name='timeout', aliases=['to'])
     @commands.has_permissions(manage_roles=True)
     async def _timeout(self, ctx: commands.Context, member: discord.Member, duration: str = None):
         if (ctx.author == member):
@@ -56,7 +56,7 @@ class Moderation(commands.Cog):
         await member.timeout_for(duration=datetime.timedelta(seconds=duration))
         await ctx.send(("Timed out {}").format(member))
 
-    @commands.command(name='untimeout')
+    @commands.command(name='untimeout', aliases=['uto'])
     @commands.has_permissions(manage_roles=True)
     async def _untimeout(self, ctx: commands.Context, member: discord.Member):
         if (member.top_role >= ctx.guild.me.top_role):
