@@ -21,6 +21,17 @@ class Lebanon(commands.Cog):
         self.last_fecthed = None
         self.caching_time_minutes = 5
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.channel.id == 982583730348646410:
+            if (len(message.attachments) > 0):
+                submission = message.attachments[0]
+                submission_channel = message.guild.get_channel(
+                    982660446492454912)
+                submission_message = await submission_channel.send(submission.url)
+                await submission_message.reply(f"Submission by {message.author.mention}")
+            await message.delete()
+
     async def update_lirarate_data(self):
         current_dt = datetime.now()
         if (self.lirarate_data):
