@@ -23,6 +23,8 @@ class Lebanon(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        if (message.author.bot):
+            return
         if message.channel.id == 982583730348646410:
             if (len(message.attachments) > 0):
                 submission = message.attachments[0]
@@ -30,6 +32,9 @@ class Lebanon(commands.Cog):
                     982660446492454912)
                 submission_message = await submission_channel.send(submission.url)
                 await submission_message.reply(f"Submission by {message.author.mention}")
+                await message.channel.send(f"{message.author.mention} your submission has been sent to another hidden channel so only mods can see it!")
+            else:
+                await message.channel.send(f"{message.author.mention} are you sure you sent an image?")
             await message.delete()
 
     async def update_lirarate_data(self):
