@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 import matplotlib.pyplot as plt
 import numpy as np
 import io
+import re
 
 
 LIRARATE_API_URL = "https://lirarate.org/wp-json/lirarate/v2/rates?currency=LBP&_ver={}"
@@ -28,10 +29,15 @@ class Lebanon(commands.Cog):
         if message.channel.id == 982583730348646410:
             if (len(message.attachments) > 0):
                 submission = message.attachments[0]
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(submission.url) as response:
+                        if (response.status == 200):
+                            submission_image = io.BytesIO(await response.read())
+                        else:
+                            return await message.send(f"{message.author.mention} couldn't download your submission, please try again")
                 submission_channel = message.guild.get_channel(
                     982660446492454912)
-                submission_message = await submission_channel.send(submission.url)
-                await submission_message.reply(f"Submission by {message.author.mention}")
+                await submission_channel.send(f"Submission by {message.author.mention}", file=discord.File(submission_image, filename=f"{message.author.id}.jpg"))
                 await message.channel.send(f"{message.author.mention} your submission has been sent to another hidden channel so only mods can see it!")
             else:
                 await message.channel.send(f"{message.author.mention} are you sure you sent an image?")
