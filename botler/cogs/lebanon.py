@@ -11,6 +11,8 @@ import re
 
 
 LIRARATE_API_URL = "https://lirarate.org/wp-json/lirarate/v2/rates?currency=LBP&_ver={}"
+GUILD_ID = 719643607195451552
+ROLE_ID = 895429738540171337
 
 
 class Lebanon(commands.Cog):
@@ -21,27 +23,32 @@ class Lebanon(commands.Cog):
         self.cached = None
         self.last_fecthed = None
         self.caching_time_minutes = 5
+        self.to_oppress = []
 
     @commands.Cog.listener()
-    async def on_message(self, message):
-        if (message.author.bot):
-            return
-        if message.channel.id == 982583730348646410:
-            if (len(message.attachments) > 0):
-                submission = message.attachments[0]
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(submission.url) as response:
-                        if (response.status == 200):
-                            submission_image = io.BytesIO(await response.read())
-                        else:
-                            return await message.send(f"{message.author.mention} couldn't download your submission, please try again")
-                submission_channel = message.guild.get_channel(
-                    982660446492454912)
-                await submission_channel.send(f"Submission by {message.author.mention}", file=discord.File(submission_image, filename=f"{message.author.id}.jpg"))
-                await message.channel.send(f"{message.author.mention} your submission has been sent to another hidden channel so only mods can see it!")
-            else:
-                await message.channel.send(f"{message.author.mention} are you sure you sent an image?")
-            await message.delete()
+    async def on_member_update(self, member_before, member_after):
+        if member_before.guild.id == GUILD_ID and member_before.id in self.to_oppress:
+            role = discord.utils.get(member_before.guild.roles, id=ROLE_ID)
+            if role not in member_after.roles:
+                await member_after.add_roles(role)
+
+    @commands.command(name='oppress')
+    async def _oppress(self, ctx: commands.Context, member: discord.Member):
+        self.to_oppress.append(member.id)
+        role = discord.utils.get(member.guild.roles, id=ROLE_ID)
+        await member.add_roles(role)
+        await ctx.reply(f"Oppressing {member.name}")
+
+    @commands.command(name='unoppress')
+    async def _unoppress(self, ctx: commands.Context, member: discord.Member):
+        if member.id in self.to_oppress:
+            self.to_oppress.remove(member.id)
+            role = discord.utils.get(member.guild.roles, id=ROLE_ID)
+            if role in member.roles:
+                await member.remove_roles(role)
+            await ctx.reply(f"Unppressing {member.name}")
+        else:
+            await ctx.reply(f"{member.name} is not oppressed")
 
     async def update_lirarate_data(self):
         current_dt = datetime.now()
