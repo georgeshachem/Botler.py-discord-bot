@@ -32,6 +32,7 @@ class Lebanon(commands.Cog):
             if role not in member_after.roles:
                 await member_after.add_roles(role)
 
+    @commands.has_permissions(manage_guild=True)
     @commands.command(name='oppress')
     async def _oppress(self, ctx: commands.Context, member: discord.Member):
         self.to_oppress.append(member.id)
@@ -39,6 +40,7 @@ class Lebanon(commands.Cog):
         await member.add_roles(role)
         await ctx.reply(f"Oppressing {member.name}")
 
+    @commands.has_permissions(manage_guild=True)
     @commands.command(name='unoppress')
     async def _unoppress(self, ctx: commands.Context, member: discord.Member):
         if member.id in self.to_oppress:
