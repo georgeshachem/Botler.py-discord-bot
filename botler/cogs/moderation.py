@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import datetime
 import botler.database.models as models
+import re
 
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
@@ -160,6 +161,48 @@ class Moderation(commands.Cog):
     @commands.command(name='purge')
     async def _purge(self, ctx: commands.Context, amount: int = 99):
         await ctx.channel.purge(limit=amount+1)
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='role')
+    async def _role(self, ctx: commands.Context, member: discord.Member, *, role: discord.Role):
+        if role in member.roles:
+            await member.remove_roles(role)
+            await ctx.send(f"Removed role {str(role)} from {str(member)}")
+        else:
+            await member.add_roles(role)
+            await ctx.send(f"Added role {str(role)} to {str(member)}")
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='roleadd', aliases=['addrole', 'arole', 'rolea'])
+    async def _role_add(self, ctx: commands.Context, member: discord.Member, *, role: discord.Role):
+        if role in member.roles:
+            await ctx.send(f"{str(member)} already has role {str(role)}")
+        else:
+            await member.add_roles(role)
+            await ctx.send(f"Added role {str(role)} to {str(member)}")
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='roleremove', aliases=['removerole', 'rrole', 'roler'])
+    async def _role_remove(self, ctx: commands.Context, member: discord.Member, *, role: discord.Role):
+        if role in member.roles:
+            await member.remove_roles(role)
+            await ctx.send(f"Removed role {str(role)} from {str(member)}")
+        else:
+            await ctx.send(f"{str(member)} does not have the role {str(role)}")
+
+    @commands.has_permissions(manage_roles=True)
+    @commands.guild_only()
+    @commands.command(name='rolecolor')
+    async def _role_color(self, ctx: commands.Context, role: discord.Role, color: str):
+        match = re.search(r'^0x(?:[0-9a-fA-F]{3}){1,2}$', color)
+        if match:
+            await role.edit(colour=int(color, 16))
+            await ctx.reply(f"Edit color of role {str(role)}")
+        else:
+            await ctx.reply("Invalid hex color. Example: 0xFF0000")
 
 
 def setup(bot):
