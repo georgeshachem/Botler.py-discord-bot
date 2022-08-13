@@ -83,7 +83,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name='kick')
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(kick_members=True)
     async def _kick(self, ctx: commands.Context, member: discord.Member, reason: str = None):
         if (ctx.author == member):
             return await ctx.send("You can't kick yourself.")
@@ -97,7 +97,7 @@ class Moderation(commands.Cog):
         await ctx.send(("Kicked {}").format(member))
 
     @commands.command(name='ban')
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(ban_members=True)
     async def _ban(self, ctx: commands.Context, member: discord.Member, reason: str = None):
         if (ctx.author == member):
             return await ctx.send("You can't ban yourself.")
