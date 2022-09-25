@@ -61,8 +61,7 @@ with open(HTML_TEMPLATE_FILE) as f:
     html_template = f.read()
 
 final_html = html_template.format(modules=modules_html, commands=commands_html)
-soup = bs(final_html, features="html.parser")
-prettyHTML = soup.prettify()
+prettyHTML = bs(final_html, features="html.parser").prettify()
 
 with open(HTML_OUTPUT_FILE, "w") as f:
     f.write(prettyHTML)
