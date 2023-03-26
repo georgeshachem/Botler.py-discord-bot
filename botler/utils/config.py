@@ -11,5 +11,5 @@ class Config:
         self.database_host = os.getenv("DATABASE_HOST")
         self.database_port = os.getenv("DATABASE_PORT")
         self.database_name = os.getenv("DATABASE_NAME")
-        self.database_uri = "postgresql://{}:{}@{}:{}/{}".format(
+        self.database_uri = "postgres://{}:{}@{}:{}/{}".format(
             self.database_username, self.database_password, self.database_host, self.database_port, self.database_name)
