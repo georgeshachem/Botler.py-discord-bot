@@ -136,3 +136,4 @@ postgres_volume/
 alembic/versions/*
 !alembic/versions/versions.txt
 config.json
+.idea/

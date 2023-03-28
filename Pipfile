@@ -7,11 +7,8 @@ name = "pypi"
 gino = "==1.0.1"
 alembic = "==1.7.6"
 psycopg2-binary = "==2.9.3"
-py-cord = {extras = ["voice"], version = "==2.0.0b5"}
-tzdata = "==2021.5"
-matplotlib = "==3.5.1"
-numpy = "==1.22.2"
 lavalink = "*"
+"discord.py" = {extras = ["voice"], version = "*"}
 
 [dev-packages]
 

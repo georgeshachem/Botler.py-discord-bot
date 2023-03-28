@@ -3,7 +3,6 @@ from discord.ext import commands
 import botler.database.models as models
 import re
 from asyncpg.exceptions import UniqueViolationError
-from botler.database.models.custom_roles import CustomRole
 
 
 class Custom(commands.Cog):
