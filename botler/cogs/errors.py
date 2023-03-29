@@ -37,10 +37,10 @@ class CommandErrorsHandler(commands.Cog):
                 pass
 
         elif isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send(error)
+            return await ctx.send(error.__str__())
 
         elif isinstance(error, commands.errors.CommandOnCooldown):
-            return await ctx.send(error)
+            return await ctx.send(error.__str__())
 
         else:
             print('Ignoring exception in command {}:'.format(

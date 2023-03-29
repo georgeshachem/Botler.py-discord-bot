@@ -23,7 +23,7 @@ class Custom(commands.Cog):
             await models.CustomRole.create(guild_id=ctx.guild.id, role_id=role.id, icon_perm=icon_perm)
         except UniqueViolationError:
             return await ctx.send("Role is already added to the custom list")
-        await ctx.send(("Added custom role: {}").format(role))
+        await ctx.send("Added custom role: {}".format(role))
 
     @commands.command(name='bulkaddcustom')
     @commands.has_permissions(manage_roles=True)
@@ -41,12 +41,12 @@ class Custom(commands.Cog):
                 roles_error.append(role.id)
         to_send = "Added custom roles: {}/{} ({} already added & {} errors)\n".format(
             i, len(roles), len(roles_already_added), len(roles_error))
-        if (len(roles_already_added) > 0):
+        if len(roles_already_added) > 0:
             to_send += "Already added roles: "
             for role in roles_already_added:
                 to_send += f"{ctx.guild.get_role(int(role))} | "
             to_send = to_send[:-3] + "\n"
-        if (len(roles_error) > 0):
+        if len(roles_error) > 0:
             to_send += "Roles with error: "
             for role in roles_error:
                 to_send += f"{ctx.guild.get_role(int(role))} | "
@@ -78,7 +78,7 @@ class Custom(commands.Cog):
 
         to_send = "Updated custom roles icon perms: {}/{} ({} errors)\n".format(
             i, len(roles), len(roles_error))
-        if (len(roles_error) > 0):
+        if len(roles_error) > 0:
             to_send += "Roles with error: "
             for role in roles_error:
                 to_send += f"{ctx.guild.get_role(int(role))} | "
@@ -104,7 +104,7 @@ class Custom(commands.Cog):
             embed = discord.Embed(title="Custom Roles")
             for role in custom_roles:
                 fetched_role = ctx.guild.get_role(int(role.role_id))
-                if (fetched_role):
+                if fetched_role:
                     if role.icon_perm:
                         embed.add_field(name=fetched_role.name,
                                         value=":white_check_mark:", inline=True)
@@ -113,7 +113,7 @@ class Custom(commands.Cog):
                                         value=":x:", inline=True)
                 else:
                     await role.delete()
-            if (len(embed.fields) > 0):
+            if len(embed.fields) > 0:
                 return await ctx.send(embed=embed)
             else:
                 return await ctx.send("All of your set up custom roles got deleted")
@@ -151,7 +151,7 @@ class Custom(commands.Cog):
                 new_icon = await ctx.message.attachments[0].read()
             except IndexError:
                 return await ctx.send("Please provide an image as an attachment")
-            await custom_role.edit(icon=new_icon)
+            await custom_role.edit(display_icon=new_icon)
             await ctx.send("Icon changed")
         else:
             await ctx.send("You don't have a custom icon")

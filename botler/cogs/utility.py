@@ -53,7 +53,7 @@ class Utility(commands.Cog):
     async def _user_info(self, ctx: commands.Context, member: discord.Member = None):
         if not member:
             member = ctx.message.author
-        roles = [role for role in (member.roles)[1:]]
+        roles = [role for role in member.roles[1:]]
         embed = discord.Embed(colour=discord.Colour.blue(), timestamp=ctx.message.created_at,
                               title=f"User Info - {member}")
         embed.set_thumbnail(url=member.display_avatar.url)

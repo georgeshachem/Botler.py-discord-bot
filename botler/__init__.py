@@ -46,10 +46,10 @@ async def setup_hook():
 
 @bot.event
 async def on_message(message):
-    if ((message.guild) and (not message.author.bot)):
+    if message.guild and (not message.author.bot):
         member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (
                     models.Economy.member_id == message.author.id)).gino.first()
-        if (member_balance):
+        if member_balance:
             await member_balance.update(balance=member_balance.balance + 2).apply()
         else:
             await models.Economy.create(guild_id=message.guild.id, member_id=message.author.id)
