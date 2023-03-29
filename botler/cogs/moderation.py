@@ -205,5 +205,5 @@ class Moderation(commands.Cog):
             await ctx.reply("Invalid hex color. Example: 0xFF0000")
 
 
-def setup(bot):
-    bot.add_cog(Moderation(bot))
+async def setup(bot):
+    await bot.add_cog(Moderation(bot))

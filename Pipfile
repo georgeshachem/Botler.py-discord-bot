@@ -7,8 +7,8 @@ name = "pypi"
 gino = "==1.0.1"
 alembic = "==1.7.6"
 psycopg2-binary = "==2.9.3"
-lavalink = "*"
 "discord.py" = {extras = ["voice"], version = "*"}
+wavelink = "*"
 
 [dev-packages]
 

@@ -21,5 +21,5 @@ class Fun(commands.Cog):
         await ctx.send(f"{ctx.author.mention} I flipped a coin and got {random.choice(['head', 'tail'])}")
 
 
-def setup(bot):
-    bot.add_cog(Fun(bot))
+async def setup(bot):
+    await bot.add_cog(Fun(bot))

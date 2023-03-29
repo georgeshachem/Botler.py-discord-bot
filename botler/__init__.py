@@ -4,6 +4,9 @@ import traceback
 import botler.utils
 from pathlib import Path
 import botler.database.models as models
+import botler.database as db
+import wavelink
+import os
 
 intents = discord.Intents.default()
 intents.members = True
@@ -21,15 +24,21 @@ def extensions():
         yield file.as_posix()[:-3].replace("/", ".")
 
 
-def load_extensions(_bot):
+async def load_extensions(_bot):
     for ext in extensions():
         print("Loaded ", ext)
         try:
-            _bot.load_extension(ext)
+            await _bot.load_extension(ext)
         except (discord.ClientException, ModuleNotFoundError):
             print(f'Failed to load extension {ext}.')
             traceback.print_exc()
 
+
+@bot.event
+async def setup_hook():
+    await db.setup()
+    node: wavelink.Node = wavelink.Node(uri="{}:{}".format(os.getenv("WAVELINK_HOST"), os.getenv("WAVELINK_PORT")), password=os.getenv("WAVELINK_PASSWORD"))
+    await wavelink.NodePool.connect(client=bot, nodes=[node])
 
 @bot.event
 async def on_message(message):
@@ -43,6 +52,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-def run():
-    load_extensions(bot)
-    bot.run(botler.utils.config.token)
+async def run():
+    await load_extensions(bot)
+    await bot.start(botler.utils.config.token)

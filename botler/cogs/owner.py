@@ -47,5 +47,5 @@ class Owner(commands.Cog, command_attrs=dict(hidden=True)):
             await ctx.send('**`SUCCESS`**')
 
 
-def setup(bot):
-    bot.add_cog(Owner(bot))
+async def setup(bot):
+    await bot.add_cog(Owner(bot))

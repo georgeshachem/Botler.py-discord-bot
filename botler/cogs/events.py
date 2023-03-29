@@ -13,7 +13,6 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await db.setup()
         self.bot.guild_data = await botler.utils.preload_guild_data()
         self.bot.invite = invite_link.format(self.bot.user.id)
         print('-----------------------')
@@ -39,5 +38,5 @@ class Events(commands.Cog):
         self.bot.guild_data.pop(guild_id, None)
 
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+async def setup(bot):
+    await bot.add_cog(Events(bot))

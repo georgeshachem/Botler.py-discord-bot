@@ -70,5 +70,5 @@ class Help(commands.Cog):
         await send_embed(ctx, embed)
 
 
-def setup(bot):
-    bot.add_cog(Help(bot))
+async def setup(bot):
+    await bot.add_cog(Help(bot))

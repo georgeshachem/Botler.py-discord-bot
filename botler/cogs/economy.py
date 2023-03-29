@@ -193,5 +193,5 @@ class Economy(commands.Cog):
             await ctx.reply("Shop is empty...")
 
 
-def setup(bot):
-    bot.add_cog(Economy(bot))
+async def setup(bot):
+    await bot.add_cog(Economy(bot))

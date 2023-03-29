@@ -36,5 +36,5 @@ class Management(commands.Cog):
 
 
 
-def setup(bot):
-    bot.add_cog(Management(bot))
+async def setup(bot):
+    await bot.add_cog(Management(bot))

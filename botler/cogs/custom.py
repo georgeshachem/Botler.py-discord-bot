@@ -149,5 +149,5 @@ class Custom(commands.Cog):
             await ctx.send("You don't have a custom icon")
 
 
-def setup(bot):
-    bot.add_cog(Custom(bot))
+async def setup(bot):
+    await bot.add_cog(Custom(bot))

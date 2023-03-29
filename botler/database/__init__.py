@@ -1,8 +1,8 @@
 from gino import Gino
-from botler import utils
 
 db = Gino()
 
+from botler import utils
 import botler.database.models as models
 
 async def setup():
