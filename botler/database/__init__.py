@@ -5,6 +5,7 @@ db = Gino()
 from botler import utils
 import botler.database.models as models
 
+
 async def setup():
     await db.set_bind(utils.config.database_uri)
 

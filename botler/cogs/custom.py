@@ -1,8 +1,10 @@
-import discord
-from discord.ext import commands
-import botler.database.models as models
 import re
+
+import discord
 from asyncpg.exceptions import UniqueViolationError
+from discord.ext import commands
+
+import botler.database.models as models
 
 
 class Custom(commands.Cog):
@@ -54,18 +56,21 @@ class Custom(commands.Cog):
     @commands.command(name='enableicon')
     @commands.has_permissions(manage_roles=True)
     async def _enable_custom_icon(self, ctx: commands.Context, role: discord.Role, icon_perm: bool = True):
-        custom_role = await models.CustomRole.query.where((models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
+        custom_role = await models.CustomRole.query.where(
+            (models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
         await custom_role.update(icon_perm=icon_perm).apply()
         await ctx.send("Updated custom role icon permission")
 
     @commands.command(name='bulkenableicon')
     @commands.has_permissions(manage_roles=True)
-    async def _bulk_enable_custom_icon(self, ctx: commands.Context, icon_perm: bool, roles: commands.Greedy[discord.Role]):
+    async def _bulk_enable_custom_icon(self, ctx: commands.Context, icon_perm: bool,
+                                       roles: commands.Greedy[discord.Role]):
         roles_error = []
         i = 0
         for role in roles:
             try:
-                custom_role = await models.CustomRole.query.where((models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
+                custom_role = await models.CustomRole.query.where(
+                    (models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
                 await custom_role.update(icon_perm=icon_perm).apply()
                 i += 1
             except Exception:
@@ -84,7 +89,8 @@ class Custom(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     async def _delete_custom_role(self, ctx: commands.Context, role: discord.Role):
         try:
-            custom_role = await models.CustomRole.query.where((models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
+            custom_role = await models.CustomRole.query.where(
+                (models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.role_id == role.id)).gino.first()
             await custom_role.delete()
         except Exception:
             return await ctx.send("Error deleting, try again")
@@ -119,7 +125,8 @@ class Custom(commands.Cog):
     async def _change_color(self, ctx: commands.Context, color: str):
         match = re.search(r'^0x(?:[0-9a-fA-F]{3}){1,2}$', color)
         if match:
-            custom_roles_raw = await models.CustomRole.query.where(models.CustomRole.guild_id == ctx.guild.id).gino.all()
+            custom_roles_raw = await models.CustomRole.query.where(
+                models.CustomRole.guild_id == ctx.guild.id).gino.all()
             custom_roles_list = [x.role_id for x in custom_roles_raw]
             custom_role = next((
                 x for x in ctx.author.roles if x.id in custom_roles_list), None)
@@ -134,7 +141,8 @@ class Custom(commands.Cog):
     @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.command(name='changeicon')
     async def _change_icon(self, ctx: commands.Context):
-        custom_roles_icon_raw = await models.CustomRole.query.where((models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.icon_perm == True)).gino.all()
+        custom_roles_icon_raw = await models.CustomRole.query.where(
+            (models.CustomRole.guild_id == ctx.guild.id) & (models.CustomRole.icon_perm == True)).gino.all()
         custom_roles_icon_list = [x.role_id for x in custom_roles_icon_raw]
         custom_role = next((
             x for x in ctx.author.roles if x.id in custom_roles_icon_list), None)

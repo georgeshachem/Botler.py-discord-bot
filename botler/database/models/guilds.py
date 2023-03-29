@@ -1,5 +1,6 @@
 from botler.database import db
 
+
 class Guild(db.Model):
     __tablename__ = "guilds"
 

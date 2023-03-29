@@ -1,6 +1,7 @@
 import sys
 import time
 from datetime import datetime
+
 import discord
 from discord.ext import commands
 
@@ -79,24 +80,24 @@ class Utility(commands.Cog):
         embed.add_field(
             name="Bot Stats",
             value=f"```py\n"
-            f"Guilds: {len(self.bot.guilds)}\n"
-            f"Users: {len(self.bot.users)}\n"
-            f"Shards: {self.bot.shard_count}\n"
-            f"Shard ID: {ctx.guild.shard_id}```",
+                  f"Guilds: {len(self.bot.guilds)}\n"
+                  f"Users: {len(self.bot.users)}\n"
+                  f"Shards: {self.bot.shard_count}\n"
+                  f"Shard ID: {ctx.guild.shard_id}```",
             inline=False,
         )
         embed.add_field(
             name=f"Server Configuration",
             value=f"```\n"
-            f"Prefix: {ctx.prefix}\n"
-            f"```",
+                  f"Prefix: {ctx.prefix}\n"
+                  f"```",
             inline=False,
         )
         embed.add_field(
             name="Software Versions",
             value=f"```py\n"
-            f"py-cord: {discord.__version__}\n"
-            f"Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}```",
+                  f"py-cord: {discord.__version__}\n"
+                  f"Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}```",
             inline=False,
         )
         embed.add_field(

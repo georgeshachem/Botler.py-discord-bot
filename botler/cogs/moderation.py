@@ -1,10 +1,11 @@
-import discord
-from discord.ext import commands
 import asyncio
 import datetime
-import botler.database.models as models
 import re
 
+import discord
+from discord.ext import commands
+
+import botler.database.models as models
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
 
@@ -68,15 +69,18 @@ class Moderation(commands.Cog):
     @commands.command(name='warn')
     @commands.has_permissions(manage_roles=True)
     async def _warn(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
-        await models.Warn.create(guild_id=ctx.guild.id, user_id=member.id, reason=reason, moderator=f'{ctx.author.name}#{ctx.author.discriminator}')
+        await models.Warn.create(guild_id=ctx.guild.id, user_id=member.id, reason=reason,
+                                 moderator=f'{ctx.author.name}#{ctx.author.discriminator}')
         await ctx.send(("Warned {}").format(member))
 
     @commands.command(name='warns')
     @commands.has_permissions(manage_roles=True)
     async def _warns(self, ctx: commands.Context, member: discord.Member):
-        member_warns = await models.Warn.query.where((models.Warn.user_id == member.id) & (models.Warn.guild_id == ctx.guild.id)).gino.all()
+        member_warns = await models.Warn.query.where(
+            (models.Warn.user_id == member.id) & (models.Warn.guild_id == ctx.guild.id)).gino.all()
         embed = discord.Embed(
-            title=f'Warnings for {member.name}#{member.discriminator} ({member.id}): {len(member_warns)}', color=0xff0000)
+            title=f'Warnings for {member.name}#{member.discriminator} ({member.id}): {len(member_warns)}',
+            color=0xff0000)
         for warn in member_warns:
             embed.add_field(name=f'ID: {warn.id} | By: {warn.moderator} | On: {warn.date.strftime("%d-%m-%Y")}',
                             value=f'{warn.reason}', inline=False)
@@ -160,7 +164,7 @@ class Moderation(commands.Cog):
     @commands.guild_only()
     @commands.command(name='purge')
     async def _purge(self, ctx: commands.Context, amount: int = 99):
-        await ctx.channel.purge(limit=amount+1)
+        await ctx.channel.purge(limit=amount + 1)
 
     @commands.has_permissions(manage_roles=True)
     @commands.guild_only()

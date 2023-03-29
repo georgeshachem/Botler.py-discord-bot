@@ -1,5 +1,7 @@
-from botler.database import db
 import datetime
+
+from botler.database import db
+
 
 class Warn(db.Model):
     __tablename__ = "warns"

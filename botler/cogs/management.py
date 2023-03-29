@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-import botler.utils
+
 import botler.database.models
+import botler.utils
 
 
 class Management(commands.Cog):
@@ -33,7 +34,6 @@ class Management(commands.Cog):
 
         embed.add_field(name="To", value=new_prefix)
         await ctx.channel.send(embed=embed)
-
 
 
 async def setup(bot):

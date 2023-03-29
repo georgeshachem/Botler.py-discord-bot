@@ -1,5 +1,6 @@
-from discord.ext import commands
 import random
+
+from discord.ext import commands
 
 
 class Fun(commands.Cog):
@@ -14,7 +15,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='roll')
     async def _roll(self, ctx: commands.Context, *, max_range: int = 6):
-        await ctx.send(f"{ctx.author.mention} I rolled a {random.randint(1,max_range)}")
+        await ctx.send(f"{ctx.author.mention} I rolled a {random.randint(1, max_range)}")
 
     @commands.command(name='coin', aliases=['flip', 'coinflip', 'cf'])
     async def _coin_flip(self, ctx: commands.Context):

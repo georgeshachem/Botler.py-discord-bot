@@ -1,7 +1,9 @@
+import datetime
+
 import discord
 from discord.ext import commands
+
 import botler.database.models as models
-import datetime
 
 
 class Economy(commands.Cog):
@@ -12,7 +14,8 @@ class Economy(commands.Cog):
     async def _balance(self, ctx: commands.Context, member: discord.Member = None):
         if not member:
             member = ctx.author
-        member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
+        member_balance = await models.Economy.query.where(
+            (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
         if (not member_balance):
             member_balance = await models.Economy.create(guild_id=ctx.guild.id, member_id=member.id)
         embed = discord.Embed(
@@ -26,9 +29,10 @@ class Economy(commands.Cog):
     @commands.command(name='addmoney', aliases=['add-money'])
     @commands.has_permissions(manage_roles=True)
     async def _add_money(self, ctx: commands.Context, member: discord.Member, amount: int):
-        member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
+        member_balance = await models.Economy.query.where(
+            (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
         if (member_balance):
-            await member_balance.update(balance=member_balance.balance+amount).apply()
+            await member_balance.update(balance=member_balance.balance + amount).apply()
             new_balance = member_balance.balance
         else:
             await models.Economy.create(guild_id=ctx.guild.id, member_id=member.id, balance=amount)
@@ -39,7 +43,8 @@ class Economy(commands.Cog):
     @commands.command(name='editmoney', aliases=['edit-money', 'setmoney', 'set-money'])
     @commands.has_permissions(manage_roles=True)
     async def _edit_money(self, ctx: commands.Context, member: discord.Member, amount: int):
-        member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
+        member_balance = await models.Economy.query.where(
+            (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
         if (member_balance):
             await member_balance.update(balance=amount).apply()
         else:
@@ -52,7 +57,8 @@ class Economy(commands.Cog):
     async def _reset_money(self, ctx: commands.Context, member: discord.Member = None):
         if not member:
             member = ctx.author
-        member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
+        member_balance = await models.Economy.query.where(
+            (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
         if (member_balance):
             await member_balance.update(balance=0).apply()
         else:
@@ -62,8 +68,10 @@ class Economy(commands.Cog):
 
     @commands.command(name='additem', aliases=['add-item', 'createitem', 'create-item'])
     @commands.has_permissions(manage_roles=True)
-    async def _add_item(self, ctx: commands.Context, name: str, price: int = 0, description: str = None, stock: int = -1, role_required: discord.Role = None,
-                        role_given: discord.Role = None, role_removed: discord.Role = None, required_balance: int = 0, reply: str = None):
+    async def _add_item(self, ctx: commands.Context, name: str, price: int = 0, description: str = None,
+                        stock: int = -1, role_required: discord.Role = None,
+                        role_given: discord.Role = None, role_removed: discord.Role = None, required_balance: int = 0,
+                        reply: str = None):
         price = abs(price)
         required_balance = abs(required_balance)
         role_required = role_required.id if role_required else None
@@ -77,10 +85,12 @@ class Economy(commands.Cog):
     @commands.command(name='buyitem', aliases=['buy-item', 'buy'])
     @commands.has_permissions(manage_roles=True)
     async def _buy_item(self, ctx: commands.Context, name: str):
-        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        item = await models.Item.query.where(
+            (models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
         if (item):
             if (item.price > 0):
-                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == ctx.author.id)).gino.first()
+                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (
+                            models.Economy.member_id == ctx.author.id)).gino.first()
                 new_balance = member_balance.balance - item.price
                 if (new_balance > 0):
                     await member_balance.update(balance=new_balance).apply()
@@ -88,7 +98,7 @@ class Economy(commands.Cog):
                     return await ctx.reply("You don't have enough money.")
 
             if (item.stock > 0):
-                await item.update(stock=item.stock-1).apply()
+                await item.update(stock=item.stock - 1).apply()
             elif (item.stock == 0):
                 return await ctx.reply("This item is out of stock.")
 
@@ -116,7 +126,8 @@ class Economy(commands.Cog):
                     return await ctx.reply("This item's role to remove does not exist. Contact an admin.")
 
             if (item.required_balance):
-                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == ctx.author.id)).gino.first()
+                member_balance = await models.Economy.query.where((models.Economy.guild_id == ctx.guild.id) & (
+                            models.Economy.member_id == ctx.author.id)).gino.first()
                 if (member_balance.balance < item.required_balance):
                     return await ctx.reply("You need a higher balance.")
 
@@ -131,7 +142,8 @@ class Economy(commands.Cog):
     @commands.command(name='edititem', aliases=['edit-item'])
     @commands.has_permissions(manage_roles=True)
     async def _edit_item(self, ctx: commands.Context, option: str, name: str, new_vlaue):
-        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        item = await models.Item.query.where(
+            (models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
         if (item):
             role_converter = commands.RoleConverter()
 
@@ -173,7 +185,8 @@ class Economy(commands.Cog):
     @commands.command(name='removeitem', aliases=['remove-item', 'deleteitem', 'delete-item'])
     @commands.has_permissions(manage_roles=True)
     async def _remove_item(self, ctx: commands.Context, name: str):
-        item = await models.Item.query.where((models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
+        item = await models.Item.query.where(
+            (models.Item.guild_id == ctx.guild.id) & (models.Item.name == name)).gino.first()
         if (item):
             await item.delete()
             await ctx.reply("Item deleted")

@@ -1,12 +1,14 @@
-import discord
-from discord.ext import commands
-import traceback
-import botler.utils
-from pathlib import Path
-import botler.database.models as models
-import botler.database as db
-import wavelink
 import os
+import traceback
+from pathlib import Path
+
+import discord
+import wavelink
+from discord.ext import commands
+
+import botler.database as db
+import botler.database.models as models
+import botler.utils
 
 intents = discord.Intents.default()
 intents.members = True
@@ -37,15 +39,18 @@ async def load_extensions(_bot):
 @bot.event
 async def setup_hook():
     await db.setup()
-    node: wavelink.Node = wavelink.Node(uri="{}:{}".format(os.getenv("WAVELINK_HOST"), os.getenv("WAVELINK_PORT")), password=os.getenv("WAVELINK_PASSWORD"))
+    node: wavelink.Node = wavelink.Node(uri="{}:{}".format(os.getenv("WAVELINK_HOST"), os.getenv("WAVELINK_PORT")),
+                                        password=os.getenv("WAVELINK_PASSWORD"))
     await wavelink.NodePool.connect(client=bot, nodes=[node])
+
 
 @bot.event
 async def on_message(message):
     if ((message.guild) and (not message.author.bot)):
-        member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (models.Economy.member_id == message.author.id)).gino.first()
+        member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (
+                    models.Economy.member_id == message.author.id)).gino.first()
         if (member_balance):
-            await member_balance.update(balance=member_balance.balance+2).apply()
+            await member_balance.update(balance=member_balance.balance + 2).apply()
         else:
             await models.Economy.create(guild_id=message.guild.id, member_id=message.author.id)
 
