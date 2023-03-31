@@ -96,7 +96,7 @@ class Utility(commands.Cog):
         embed.add_field(
             name="Software Versions",
             value=f"```py\n"
-                  f"py-cord: {discord.__version__}\n"
+                  f"discord.py: {discord.__version__}\n"
                   f"Python: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}```",
             inline=False,
         )
