@@ -38,7 +38,7 @@ class Economy(commands.Cog):
             await models.Economy.create(guild_id=ctx.guild.id, member_id=member.id, balance=amount)
             new_balance = amount
         await ctx.reply(
-            f"Added {amount} to {member.name}#{member.discriminator}. His new balance is {new_balance}")
+            f"Added {amount} to {member.mention}. His new balance is {new_balance}")
 
     @commands.command(name='editmoney', aliases=['edit-money', 'setmoney', 'set-money'])
     @commands.has_permissions(manage_roles=True)
