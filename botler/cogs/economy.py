@@ -27,7 +27,7 @@ class Economy(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(name='addmoney', aliases=['add-money'])
-    @commands.has_permissions(manage_roles=True)
+    @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
     async def _add_money(self, ctx: commands.Context, member: discord.Member, amount: int):
         member_balance = await models.Economy.query.where(
             (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
@@ -41,7 +41,7 @@ class Economy(commands.Cog):
             f"Added {amount} to {member.mention}. His new balance is {new_balance}")
 
     @commands.command(name='editmoney', aliases=['edit-money', 'setmoney', 'set-money'])
-    @commands.has_permissions(manage_roles=True)
+    @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
     async def _edit_money(self, ctx: commands.Context, member: discord.Member, amount: int):
         member_balance = await models.Economy.query.where(
             (models.Economy.guild_id == ctx.guild.id) & (models.Economy.member_id == member.id)).gino.first()
@@ -50,10 +50,10 @@ class Economy(commands.Cog):
         else:
             await models.Economy.create(guild_id=ctx.guild.id, member_id=member.id, balance=amount)
         await ctx.reply(
-            f"Set {member.name}#{member.discriminator} balance to {amount}")
+            f"Set {member.mention} balance to {amount}")
 
     @commands.command(name='resetmoney', aliases=['reset-money'])
-    @commands.has_permissions(manage_roles=True)
+    @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
     async def _reset_money(self, ctx: commands.Context, member: discord.Member = None):
         if not member:
             member = ctx.author
@@ -64,7 +64,7 @@ class Economy(commands.Cog):
         else:
             await models.Economy.create(guild_id=ctx.guild.id, member_id=member.id)
         await ctx.reply(
-            f"Resetted {member.name}#{member.discriminator} balance.")
+            f"Resetted {member.mention} balance.")
 
     @commands.command(name='additem', aliases=['add-item', 'createitem', 'create-item'])
     @commands.has_permissions(manage_roles=True)
