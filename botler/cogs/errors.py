@@ -20,7 +20,7 @@ class CommandErrorsHandler(commands.Cog):
             if cog._get_overridden_method(cog.cog_command_error) is not None:
                 return
 
-        ignored = (commands.CommandNotFound, commands.MissingPermissions)
+        ignored = (commands.CommandNotFound, commands.MissingPermissions, commands.errors.CheckAnyFailure)
 
         error = getattr(error, 'original', error)
 
