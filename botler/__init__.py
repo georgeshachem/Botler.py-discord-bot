@@ -5,6 +5,7 @@ from pathlib import Path
 import discord
 import wavelink
 from discord.ext import commands
+from wavelink.ext import spotify
 
 import botler.database as db
 import botler.database.models as models
@@ -39,16 +40,21 @@ async def load_extensions(_bot):
 @bot.event
 async def setup_hook():
     await db.setup()
+
+    sc = spotify.SpotifyClient(
+        client_id=os.getenv("SPOTIFY_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIFY_CLIENT_SECRET")
+    )
     node: wavelink.Node = wavelink.Node(uri="{}:{}".format(os.getenv("WAVELINK_HOST"), os.getenv("WAVELINK_PORT")),
                                         password=os.getenv("WAVELINK_PASSWORD"))
-    await wavelink.NodePool.connect(client=bot, nodes=[node])
+    await wavelink.NodePool.connect(client=bot, nodes=[node], spotify=sc)
 
 
 @bot.event
 async def on_message(message):
     if message.guild and (not message.author.bot):
         member_balance = await models.Economy.query.where((models.Economy.guild_id == message.guild.id) & (
-                    models.Economy.member_id == message.author.id)).gino.first()
+                models.Economy.member_id == message.author.id)).gino.first()
         if member_balance:
             await member_balance.update(balance=member_balance.balance + 2).apply()
         else:
